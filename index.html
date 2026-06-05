@@ -1,762 +1,1156 @@
-<!DOCTYPE html><html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Projeto Caverna</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #050816;
-      --panel: rgba(255,255,255,.06);
-      --panel-2: rgba(255,255,255,.09);
-      --border: rgba(255,255,255,.12);
-      --text: #eef2ff;
-      --muted: #aab3d2;
-      --accent: #34d399;
-      --accent2: #38bdf8;
-      --accent3: #f59e0b;
-      --danger: #fb7185;
-      --shadow: 0 20px 50px rgba(0,0,0,.35);
-      --radius: 24px;
-    }* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; background: radial-gradient(circle at top, rgba(56,189,248,.14), transparent 30%), radial-gradient(circle at right, rgba(168,85,247,.14), transparent 28%), linear-gradient(135deg, #020617 0%, #0f172a 48%, #111827 100%); color: var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-button, input, textarea { font: inherit; }
-button { cursor: pointer; }
+      --bg-deep: #080b12;
+      --bg-surface: #0d1220;
+      --bg-card: #111827;
+      --bg-card2: #0f1523;
+      --border: rgba(255,255,255,.08);
+      --border-glow: rgba(251,176,59,.22);
+      --text: #e8ecf4;
+      --muted: #8b96b5;
+      --dim: #4a5270;
+      --gold: #fbb03b;
+      --gold-dark: #d4840a;
+      --gold-pale: rgba(251,176,59,.12);
+      --teal: #2dd4bf;
+      --teal-pale: rgba(45,212,191,.1);
+      --red: #f87171;
+      --red-pale: rgba(248,113,113,.1);
+      --blue: #60a5fa;
+      --blue-pale: rgba(96,165,250,.1);
+      --green: #4ade80;
+      --green-pale: rgba(74,222,128,.1);
+      --r: 20px;
+      --r-lg: 28px;
+    }
 
-.wrap { max-width: 1300px; margin: 0 auto; padding: 20px; }
-.hero { background: var(--panel); border: 1px solid var(--border); border-radius: 32px; padding: 24px; box-shadow: var(--shadow); backdrop-filter: blur(14px); }
-.hero-top { display: grid; grid-template-columns: 1.4fr .9fr; gap: 18px; align-items: start; }
-.badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: rgba(52,211,153,.14); color: #dcfce7; border: 1px solid rgba(52,211,153,.18); font-size: 13px; }
-h1 { margin: 14px 0 12px; font-size: clamp(2rem, 4vw, 4rem); line-height: 1.02; letter-spacing: -0.04em; }
-.lead { max-width: 900px; color: var(--muted); line-height: 1.75; font-size: 1rem; }
-.chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
-.chip { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border: 1px solid var(--border); background: rgba(255,255,255,.05); border-radius: 999px; color: #e5e7eb; font-size: 14px; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.profile { background: rgba(0,0,0,.2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
-.profile h3 { margin: 0 0 14px; font-size: 16px; }
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.field { width: 100%; border-radius: 16px; border: 1px solid var(--border); background: rgba(255,255,255,.05); color: var(--text); padding: 12px 14px; outline: none; }
-.field::placeholder, textarea.field::placeholder { color: #8f98bb; }
-textarea.field { min-height: 92px; resize: vertical; }
-.small { font-size: 12px; color: var(--muted); }
+    html { scroll-behavior: smooth; }
 
-.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 18px 0; }
-.stat { background: var(--panel); border: 1px solid var(--border); border-radius: 24px; padding: 18px; box-shadow: var(--shadow); }
-.stat .label { color: var(--muted); font-size: 13px; display: flex; align-items: center; gap: 8px; }
-.stat .value { font-size: 2rem; font-weight: 900; margin-top: 6px; letter-spacing: -0.04em; }
-.stat .note { color: #7c86a7; font-size: 12px; margin-top: 4px; }
+    body {
+      background: var(--bg-deep);
+      background-image:
+        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(251,176,59,.06), transparent),
+        radial-gradient(ellipse 60% 40% at 80% 110%, rgba(45,212,191,.05), transparent),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      color: var(--text);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
 
-.main { display: grid; grid-template-columns: 1.4fr .9fr; gap: 18px; margin-top: 18px; }
-.card { background: var(--panel); border: 1px solid var(--border); border-radius: 28px; box-shadow: var(--shadow); backdrop-filter: blur(14px); overflow: hidden; }
-.card .header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; flex-wrap: wrap; }
-.tab { border: 0; color: #dbeafe; background: rgba(255,255,255,.05); padding: 10px 14px; border-radius: 999px; }
-.tab.active { background: #fff; color: #020617; font-weight: 700; }
-.content { padding: 20px; }
-.section-title { display: flex; align-items: center; gap: 10px; font-size: 1.15rem; font-weight: 800; margin-bottom: 6px; }
-.sub { color: var(--muted); font-size: 14px; line-height: 1.7; }
+    button, input, textarea, select { font: inherit; color: inherit; }
+    button { cursor: pointer; background: none; border: none; }
 
-.progress-row { display: grid; grid-template-columns: 1fr 160px; gap: 12px; align-items: center; margin: 16px 0 14px; }
-.progress-box { display: grid; gap: 8px; }
-.progress-label { display: flex; justify-content: space-between; color: #cbd5e1; font-size: 14px; }
-.progress { width: 100%; height: 12px; background: rgba(255,255,255,.08); border-radius: 999px; overflow: hidden; }
-.bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 999px; transition: width .3s ease; }
+    /* ── LAYOUT ── */
+    .wrap { max-width: 1320px; margin: 0 auto; padding: 24px 20px 60px; }
 
-.right-panel { display: grid; gap: 18px; }
-.task-list { display: grid; gap: 12px; }
-.task { width: 100%; text-align: left; border-radius: 22px; border: 1px solid var(--border); background: rgba(0,0,0,.18); color: var(--text); padding: 14px; transition: .2s ease; }
-.task:hover { transform: translateY(-1px); background: rgba(255,255,255,.06); }
-.task.done { border-color: rgba(52,211,153,.45); background: rgba(16,185,129,.12); }
-.task-top { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
-.task-name { font-weight: 800; }
-.task-hint { color: var(--muted); font-size: 13px; margin-top: 6px; line-height: 1.5; }
-.xp { font-size: 12px; color: #cbd5e1; background: rgba(255,255,255,.07); padding: 6px 10px; border-radius: 999px; }
-.check { font-size: 18px; }
+    /* ── TYPOGRAPHY ── */
+    .cinzel { font-family: 'Cinzel', serif; }
 
-.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.mini { border: 1px solid var(--border); background: rgba(0,0,0,.2); border-radius: 22px; padding: 14px; }
-.mini strong { display: block; margin-bottom: 6px; }
-.mini p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    /* ── CARD BASE ── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+    .card.gold-border { border-color: var(--border-glow); }
 
-.list { display: grid; gap: 10px; }
-.row { display: flex; justify-content: space-between; gap: 10px; align-items: center; border: 1px solid var(--border); background: rgba(255,255,255,.05); border-radius: 18px; padding: 12px 14px; }
-.row small { color: var(--muted); }
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #0e1729 0%, #0b1520 60%, #0f1a14 100%);
+      border: 1px solid var(--border-glow);
+      border-radius: 36px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: -60px;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(251,176,59,.08), transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '⛏';
+      font-size: 240px;
+      position: absolute;
+      right: -20px; bottom: -30px;
+      opacity: .03;
+      pointer-events: none;
+      line-height: 1;
+    }
+    .hero-grid { display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; position: relative; }
 
-.buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
-.btn { border: 0; border-radius: 18px; padding: 12px 16px; font-weight: 700; transition: .2s ease; }
-.btn:hover { transform: translateY(-1px); }
-.btn.primary { background: var(--accent); color: #022c22; }
-.btn.secondary { background: rgba(255,255,255,.08); color: white; border: 1px solid var(--border); }
-.btn.danger { background: rgba(251,113,133,.15); color: #ffe4e6; border: 1px solid rgba(251,113,133,.3); }
+    .badge-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 999px;
+      background: var(--gold-pale);
+      border: 1px solid var(--border-glow);
+      color: var(--gold);
+      font-size: 12px; font-weight: 500;
+      letter-spacing: .04em;
+      margin-bottom: 16px;
+    }
 
-.timeline { display: grid; gap: 10px; }
-.dayitem { display: flex; justify-content: space-between; gap: 10px; align-items: center; border: 1px solid var(--border); background: rgba(255,255,255,.05); border-radius: 18px; padding: 12px 14px; }
-.dayitem button { border: 0; border-radius: 999px; padding: 8px 12px; background: rgba(255,255,255,.08); color: white; }
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.2rem, 4.5vw, 4.2rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      background: linear-gradient(135deg, #ffe9a0 0%, var(--gold) 50%, #d97706 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 14px;
+    }
 
-.note-box { margin-top: 12px; border: 1px solid var(--border); background: rgba(255,255,255,.05); border-radius: 22px; padding: 14px; }
-.note-box textarea { width: 100%; min-height: 120px; }
+    .lead { color: var(--muted); line-height: 1.8; font-size: 15px; max-width: 600px; }
 
-.reward { border-radius: 22px; border: 1px solid var(--border); background: rgba(0,0,0,.18); padding: 14px; }
-.reward.locked { opacity: .85; }
-.reward.unlocked { border-color: rgba(52,211,153,.32); background: rgba(16,185,129,.12); }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 8px 14px; border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      font-size: 13px; color: var(--text);
+      transition: border-color .2s, background .2s;
+    }
+    .chip:hover { border-color: var(--border-glow); background: var(--gold-pale); }
+    .chip .icon { font-size: 15px; }
 
-.footer { margin-top: 18px; color: #7c86a7; font-size: 12px; text-align: center; }
-.flash { margin-top: 12px; color: #a7f3d0; font-size: 13px; }
-.range { width: 100%; accent-color: var(--accent); }
+    /* ── PROFILE CARD ── */
+    .profile-card {
+      background: rgba(0,0,0,.3);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 20px;
+    }
+    .profile-card h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      letter-spacing: .1em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-@media (max-width: 1100px) {
-  .hero-top, .main { grid-template-columns: 1fr; }
-  .stats { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 700px) {
-  .wrap { padding: 12px; }
-  .stats, .grid3, .grid2, .progress-row { grid-template-columns: 1fr; }
-  h1 { font-size: 2.4rem; }
-  .content, .hero { padding: 16px; }
-}
+    .field {
+      width: 100%;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color .2s, background .2s;
+      font-size: 14px;
+    }
+    .field:focus { border-color: var(--gold); background: rgba(251,176,59,.05); }
+    .field::placeholder { color: var(--dim); }
+    textarea.field { min-height: 80px; resize: vertical; }
+    .small { font-size: 12px; color: var(--muted); }
 
+    /* ── STAT BAR ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .stat {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 20px 18px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .2s, transform .2s;
+    }
+    .stat:hover { border-color: var(--border-glow); transform: translateY(-2px); }
+    .stat::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      border-radius: 2px 2px 0 0;
+    }
+    .stat.s-gold::before { background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+    .stat.s-teal::before { background: linear-gradient(90deg, transparent, var(--teal), transparent); }
+    .stat.s-blue::before { background: linear-gradient(90deg, transparent, var(--blue), transparent); }
+    .stat.s-green::before { background: linear-gradient(90deg, transparent, var(--green), transparent); }
+
+    .stat .s-label { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+    .stat .s-value { font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 700; letter-spacing: -.03em; line-height: 1; }
+    .stat .s-note { font-size: 12px; color: var(--dim); margin-top: 6px; }
+    .stat.s-gold .s-value { color: var(--gold); }
+    .stat.s-teal .s-value { color: var(--teal); }
+    .stat.s-blue .s-value { color: var(--blue); }
+    .stat.s-green .s-value { color: var(--green); }
+
+    /* ── MAIN LAYOUT ── */
+    .main { display: grid; grid-template-columns: 1fr 340px; gap: 18px; }
+
+    /* ── TABS ── */
+    .tab-bar {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex; gap: 6px; flex-wrap: wrap;
+    }
+    .tab {
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 13px; font-weight: 500;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid transparent;
+      transition: all .2s;
+    }
+    .tab:hover { color: var(--text); background: rgba(255,255,255,.05); }
+    .tab.active {
+      background: var(--gold);
+      color: #1a0a00;
+      font-weight: 700;
+      border-color: transparent;
+    }
+    .tabpage { display: none; }
+    .tabpage.active { display: block; }
+    .content { padding: 22px; }
+
+    /* ── SECTION TITLES ── */
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      letter-spacing: .08em;
+      color: var(--gold);
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 4px;
+    }
+    .section-title .icon { font-size: 16px; }
+    .sub { color: var(--muted); font-size: 14px; line-height: 1.75; }
+
+    /* ── PROGRESS ── */
+    .progress-wrap {
+      display: grid; grid-template-columns: 1fr 200px;
+      gap: 16px; align-items: start;
+      margin: 18px 0 16px;
+    }
+    .prog-bar-wrap { display: grid; gap: 8px; }
+    .prog-label { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
+    .prog-track {
+      width: 100%; height: 10px;
+      background: rgba(255,255,255,.07);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .prog-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold), #ffe580);
+      border-radius: 999px;
+      transition: width .4s cubic-bezier(.4,0,.2,1);
+      position: relative;
+    }
+    .prog-fill::after {
+      content: '';
+      position: absolute; right: 0; top: 0; bottom: 0; width: 12px;
+      background: rgba(255,255,255,.4);
+      filter: blur(3px);
+      border-radius: 999px;
+    }
+
+    /* ── AREA CARDS ── */
+    .area-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+    .area-card {
+      background: rgba(0,0,0,.25);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 14px;
+      text-align: left;
+      width: 100%;
+      transition: all .2s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .area-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--gold-pale);
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .area-card:hover { transform: translateY(-2px); border-color: var(--border-glow); }
+    .area-card:hover::before { opacity: 1; }
+    .area-card.done {
+      border-color: rgba(74,222,128,.35);
+      background: rgba(74,222,128,.06);
+    }
+    .area-card.done::before { display: none; }
+
+    .area-top { display: flex; justify-content: space-between; align-items: flex-start; position: relative; }
+    .area-icon { font-size: 22px; line-height: 1; margin-bottom: 8px; display: block; }
+    .area-name { font-weight: 700; font-size: 14px; }
+    .area-hint { color: var(--muted); font-size: 12px; margin-top: 4px; line-height: 1.5; }
+    .area-xp { font-size: 11px; font-weight: 700; color: var(--gold); background: var(--gold-pale); border: 1px solid var(--border-glow); padding: 4px 8px; border-radius: 999px; white-space: nowrap; }
+    .area-status { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+    .area-status-text { font-size: 12px; color: var(--muted); }
+    .area-check { font-size: 16px; }
+    .area-starters { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+    .starter-chip { font-size: 11px; padding: 4px 8px; border-radius: 999px; background: rgba(255,255,255,.05); border: 1px solid var(--border); color: var(--muted); }
+
+    /* ── HABITS ── */
+    .habit-list { display: grid; gap: 8px; }
+    .habit-btn {
+      width: 100%; text-align: left;
+      background: rgba(0,0,0,.2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex; justify-content: space-between; align-items: center;
+      transition: all .2s; cursor: pointer;
+    }
+    .habit-btn:hover { border-color: var(--border-glow); background: var(--gold-pale); }
+    .habit-btn.done { border-color: rgba(74,222,128,.3); background: rgba(74,222,128,.07); }
+    .habit-name { font-weight: 500; font-size: 14px; }
+    .habit-sub { font-size: 12px; color: var(--muted); }
+    .habit-xp { font-size: 11px; color: var(--teal); background: var(--teal-pale); padding: 4px 8px; border-radius: 999px; }
+
+    /* ── NOTE / MOOD ── */
+    .note-mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+    .inner-card { background: rgba(0,0,0,.2); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; }
+    .inner-card .section-title { margin-bottom: 10px; }
+    .range-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+    input[type=range] { flex: 1; accent-color: var(--gold); }
+    .range-val { font-family: 'Cinzel', serif; font-size: 18px; color: var(--gold); font-weight: 700; min-width: 28px; text-align: center; }
+
+    /* ── TRAINING ── */
+    .training-row {
+      display: flex; justify-content: space-between; align-items: center;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.18);
+      border-radius: 14px; padding: 12px 14px;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .training-row:last-child { margin-bottom: 0; }
+    .training-name { font-weight: 600; font-size: 14px; }
+    .training-tip { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .training-sets { font-size: 12px; color: var(--blue); background: var(--blue-pale); border: 1px solid rgba(96,165,250,.2); padding: 5px 10px; border-radius: 999px; white-space: nowrap; }
+
+    /* ── CHECKLIST / REWARDS ── */
+    .reward-item {
+      border: 1px solid var(--border);
+      border-radius: 14px; padding: 14px;
+      margin-bottom: 8px;
+      transition: all .2s;
+    }
+    .reward-item:last-child { margin-bottom: 0; }
+    .reward-item.unlocked { border-color: rgba(74,222,128,.3); background: rgba(74,222,128,.06); }
+    .reward-item.locked { opacity: .7; }
+    .reward-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .reward-label { font-weight: 600; font-size: 14px; }
+    .reward-req { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    .badge-status {
+      font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 999px;
+    }
+    .badge-status.unlocked { background: rgba(74,222,128,.15); color: var(--green); border: 1px solid rgba(74,222,128,.3); }
+    .badge-status.locked { background: rgba(255,255,255,.05); color: var(--dim); border: 1px solid var(--border); }
+
+    /* ── WEEK LIST ── */
+    .week-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .week-row:last-child { margin-bottom: 0; }
+    .week-label { font-size: 12px; color: var(--muted); width: 32px; text-align: right; }
+    .week-track { flex: 1; height: 8px; background: rgba(255,255,255,.07); border-radius: 999px; overflow: hidden; }
+    .week-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); border-radius: 999px; transition: width .4s ease; }
+    .week-score { font-size: 12px; font-weight: 700; color: var(--gold); width: 40px; text-align: right; font-family: 'Cinzel', serif; }
+
+    /* ── NOTE BOX ── */
+    .note-box { background: rgba(0,0,0,.2); border: 1px solid var(--border); border-radius: var(--r); padding: 14px; margin-top: 14px; }
+    .note-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .note-row:last-child { border-bottom: none; }
+    .note-row strong { font-family: 'Cinzel', serif; color: var(--gold); }
+
+    /* ── RIGHT PANEL ── */
+    .right-panel { display: grid; gap: 16px; align-content: start; }
+
+    /* ── SUMMARY ROWS ── */
+    .sum-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .sum-row:last-child { border-bottom: none; }
+    .sum-row span { color: var(--muted); }
+    .sum-row strong { font-family: 'Cinzel', serif; font-size: 15px; color: var(--gold); }
+
+    /* ── BUTTONS ── */
+    .btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .btn {
+      border-radius: 12px; padding: 10px 16px;
+      font-size: 13px; font-weight: 700;
+      transition: all .2s;
+      border: 1px solid transparent;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0) scale(.98); }
+    .btn.primary { background: var(--gold); color: #1a0a00; }
+    .btn.primary:hover { background: #ffd060; }
+    .btn.secondary { background: rgba(255,255,255,.07); border-color: var(--border); color: var(--text); }
+    .btn.secondary:hover { background: rgba(255,255,255,.11); }
+    .btn.danger { background: rgba(248,113,113,.1); border-color: rgba(248,113,113,.25); color: var(--red); }
+    .btn.danger:hover { background: rgba(248,113,113,.18); }
+
+    /* ── FLASH ── */
+    .flash { font-size: 13px; color: var(--green); margin-top: 10px; min-height: 18px; transition: opacity .3s; }
+
+    /* ── JOURNAL ── */
+    .journal-entry {
+      border: 1px solid var(--border);
+      border-radius: 14px; padding: 14px;
+      margin-bottom: 8px;
+      background: rgba(0,0,0,.15);
+    }
+    .journal-entry:last-child { margin-bottom: 0; }
+    .journal-date { font-size: 12px; color: var(--gold); font-family: 'Cinzel', serif; margin-bottom: 4px; }
+    .journal-text { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    /* ── MOTTO BOX ── */
+    .motto-box {
+      background: linear-gradient(135deg, rgba(251,176,59,.08), rgba(45,212,191,.06));
+      border: 1px solid var(--border-glow);
+      border-radius: var(--r);
+      padding: 20px;
+      font-family: 'Cinzel', serif;
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.8;
+      text-align: center;
+      letter-spacing: .02em;
+      margin-bottom: 14px;
+    }
+
+    /* ── HOW TO USE ── */
+    .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .how-card { background: rgba(0,0,0,.2); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; }
+    .how-num { font-family: 'Cinzel', serif; font-size: 28px; font-weight: 900; color: rgba(251,176,59,.25); line-height: 1; margin-bottom: 8px; }
+    .how-title { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+    .how-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ── FOOTER ── */
+    footer { text-align: center; color: var(--dim); font-size: 12px; margin-top: 24px; letter-spacing: .05em; }
+
+    /* ── INNER GRID (2col inside card) ── */
+    .col2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    /* ── XP POPUP ANIMATION ── */
+    @keyframes xpPop {
+      0% { opacity: 0; transform: translateY(0) scale(.7); }
+      40% { opacity: 1; transform: translateY(-24px) scale(1.1); }
+      80% { opacity: 1; transform: translateY(-40px) scale(1); }
+      100% { opacity: 0; transform: translateY(-60px) scale(.9); }
+    }
+    .xp-pop {
+      position: fixed;
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--gold);
+      pointer-events: none;
+      animation: xpPop .8s ease forwards;
+      z-index: 999;
+      text-shadow: 0 0 20px rgba(251,176,59,.8);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .hero-grid, .main { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .wrap { padding: 12px 12px 48px; }
+      .hero { padding: 20px; border-radius: 24px; }
+      h1 { font-size: 2.4rem; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .area-grid, .col2, .how-grid, .note-mood-grid { grid-template-columns: 1fr; }
+      .grid2 { grid-template-columns: 1fr; }
+      .progress-wrap { grid-template-columns: 1fr; }
+      .content { padding: 16px; }
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <section class="hero">
-      <div class="hero-top">
-        <div>
-          <div class="badge">Projeto Caverna • painel pessoal</div>
-          <h1>Disciplina, força, fé e progresso num só lugar.</h1>
-          <p class="lead">Site para acompanhar programação, Jeová, escola, treino, postura, Libras e sua rotina diária. Ele mostra XP, sequência, progresso, recompensa e o que precisa de mais atenção.</p>
-          <div class="chips">
-            <div class="chip">🔥 <span id="streakChip">0 dia(s) de sequência</span></div>
-            <div class="chip">⭐ <span id="levelChip">Lv. 1</span></div>
-            <div class="chip">🎯 <span id="xpChip">0 XP total</span></div>
-            <div class="chip">📅 <span id="dateChip">Hoje</span></div>
-          </div>
-        </div><div class="profile">
-      <h3>Seu perfil</h3>
-      <div class="grid2">
-        <input id="projectName" class="field" placeholder="Nome do projeto" />
-        <input id="age" class="field" placeholder="Idade" />
-        <input id="height" class="field" placeholder="Altura" />
-        <input id="weight" class="field" placeholder="Peso" />
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="badge-pill">⛏ Projeto Caverna &nbsp;·&nbsp; Painel pessoal</div>
+        <h1>Disciplina.<br>Força. Fé.<br>Progresso.</h1>
+        <p class="lead">Acompanhe programação, fé, escola, treino, postura e Libras num único painel com XP, sequência, recompensas e diário.</p>
+        <div class="chips">
+          <div class="chip"><span class="icon">🔥</span><span id="streakChip">0 dia(s) de sequência</span></div>
+          <div class="chip"><span class="icon">⭐</span><span id="levelChip">Lv. 1</span></div>
+          <div class="chip"><span class="icon">🎯</span><span id="xpChip">0 XP total</span></div>
+          <div class="chip"><span class="icon">📅</span><span id="dateChip">Hoje</span></div>
+        </div>
       </div>
-      <div style="height:10px"></div>
-      <textarea id="goal" class="field" placeholder="Meta principal"></textarea>
-      <div style="height:10px"></div>
-      <input id="motto" class="field" placeholder="Seu lema" />
-      <div class="small" style="margin-top:10px;">Tudo fica salvo no navegador.</div>
-    </div>
-  </div>
-</section>
 
-<section class="stats">
-  <div class="stat"><div class="label">📊 Pontuação de hoje</div><div class="value" id="todayXp">0 XP</div><div class="note" id="todayNote">0/5 áreas concluídas</div></div>
-  <div class="stat"><div class="label">🔥 Sequência</div><div class="value" id="streak">0</div><div class="note">Dias completos seguidos</div></div>
-  <div class="stat"><div class="label">🏅 Nível atual</div><div class="value" id="level">Lv. 1</div><div class="note" id="levelNote">0/150 XP para subir</div></div>
-  <div class="stat"><div class="label">🎁 Recompensa</div><div class="value" id="reward">Bloqueada</div><div class="note" id="rewardNote">Complete mais metas</div></div>
-</section>
-
-<section class="main">
-  <div class="card">
-    <div class="header">
-      <button class="tab active" data-tab="hoje">Hoje</button>
-      <button class="tab" data-tab="treino">Treino</button>
-      <button class="tab" data-tab="meta">Metas</button>
-      <button class="tab" data-tab="progresso">Progresso</button>
-      <button class="tab" data-tab="reforco">Reforço</button>
+      <div class="profile-card">
+        <h3>Seu perfil</h3>
+        <div class="grid2">
+          <input id="projectName" class="field" placeholder="Nome do projeto" />
+          <input id="age" class="field" placeholder="Idade" />
+          <input id="height" class="field" placeholder="Altura" />
+          <input id="weight" class="field" placeholder="Peso" />
+        </div>
+        <div style="height:10px"></div>
+        <textarea id="goal" class="field" placeholder="Meta principal"></textarea>
+        <div style="height:10px"></div>
+        <input id="motto" class="field" placeholder="Seu lema" />
+        <p class="small" style="margin-top:10px;">Tudo salvo no navegador.</p>
+      </div>
     </div>
-    <div class="content">
-      <div id="tab-hoje" class="tabpage">
-        <div class="section-title">🕒 Seu dia selecionado</div>
-        <div class="sub">Escolha qualquer dia do histórico para ver como foi. O dia de hoje é salvo automaticamente.</div>
-        <div class="progress-row">
-          <div class="progress-box">
-            <div class="progress-label"><span>Progresso do dia</span><span id="dayProgressText">0%</span></div>
-            <div class="progress"><div id="dayBar" class="bar"></div></div>
-            <div class="small" id="dayRecommendation">Comece com uma meta pequena</div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats">
+    <div class="stat s-gold">
+      <div class="s-label">📊 Pontuação de hoje</div>
+      <div class="s-value" id="todayXp">0 XP</div>
+      <div class="s-note" id="todayNote">0/5 áreas concluídas</div>
+    </div>
+    <div class="stat s-teal">
+      <div class="s-label">🔥 Sequência</div>
+      <div class="s-value" id="streak">0</div>
+      <div class="s-note">Dias completos seguidos</div>
+    </div>
+    <div class="stat s-blue">
+      <div class="s-label">🏅 Nível atual</div>
+      <div class="s-value" id="level">Lv. 1</div>
+      <div class="s-note" id="levelNote">0/150 XP para subir</div>
+    </div>
+    <div class="stat s-green">
+      <div class="s-label">🎁 Recompensa</div>
+      <div class="s-value" id="reward" style="font-size:1.1rem; padding-top:4px;">Bloqueada</div>
+      <div class="s-note" id="rewardNote">Complete mais metas</div>
+    </div>
+  </section>
+
+  <!-- MAIN -->
+  <section class="main">
+    <!-- LEFT CARD -->
+    <div class="card">
+      <div class="tab-bar">
+        <button class="tab active" data-tab="hoje">Hoje</button>
+        <button class="tab" data-tab="treino">Treino</button>
+        <button class="tab" data-tab="meta">Metas</button>
+        <button class="tab" data-tab="progresso">Progresso</button>
+        <button class="tab" data-tab="reforco">Reforço</button>
+      </div>
+
+      <!-- TAB: HOJE -->
+      <div id="tab-hoje" class="tabpage active content">
+        <div class="section-title"><span class="icon">🕒</span> Dia selecionado</div>
+        <p class="sub">Escolha qualquer data para ver ou editar. O dia de hoje é salvo automaticamente.</p>
+
+        <div class="progress-wrap">
+          <div class="prog-bar-wrap">
+            <div class="prog-label"><span>Progresso do dia</span><span id="dayProgressText">0%</span></div>
+            <div class="prog-track"><div id="dayBar" class="prog-fill"></div></div>
+            <p class="small" id="dayRecommendation">Comece com uma meta pequena</p>
           </div>
           <div>
             <input type="date" id="selectedDate" class="field" />
-            <div class="small" style="margin-top:8px;">Selecione um dia para editar.</div>
+            <p class="small" style="margin-top:8px;">Selecione um dia para editar.</p>
           </div>
         </div>
 
-        <div class="grid3" id="areaCards"></div>
+        <div class="area-grid" id="areaCards"></div>
 
-        <div class="grid2" style="margin-top:14px;">
-          <div class="card" style="background: rgba(0,0,0,.2); box-shadow:none;">
-            <div class="content">
-              <div class="section-title">✅ Hábitos e suporte</div>
-              <div class="task-list" id="habitCards"></div>
-            </div>
+        <div class="note-mood-grid" style="margin-top:14px;">
+          <div class="inner-card">
+            <div class="section-title"><span class="icon">✅</span> Hábitos</div>
+            <div class="habit-list" id="habitCards"></div>
           </div>
-          <div class="card" style="background: rgba(0,0,0,.2); box-shadow:none;">
-            <div class="content">
-              <div class="section-title">🧠 Nota do dia</div>
-              <textarea id="dayNote" class="field" placeholder="Escreva o que fez bem, o que vai melhorar e o que vai fazer amanhã."></textarea>
-              <div style="height:10px"></div>
-              <label class="small">Humor / energia: <span id="moodValue">3</span>/5</label>
-              <input type="range" min="1" max="5" id="mood" class="range" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="tab-treino" class="tabpage" style="display:none;">
-        <div class="section-title">💪 Treino, postura e corpo forte</div>
-        <div class="sub">Uma rotina consistente vale mais do que exagerar e desistir. Este bloco reúne força, postura e base física.</div>
-        <div class="grid2" style="margin-top:14px;">
-          <div class="card" style="background: rgba(0,0,0,.2); box-shadow:none;">
-            <div class="content">
-              <div class="section-title">Treino completo</div>
-              <div class="list" id="trainingList"></div>
-            </div>
-          </div>
-          <div class="card" style="background: rgba(0,0,0,.2); box-shadow:none;">
-            <div class="content">
-              <div class="section-title">Postura e corpo</div>
-              <div class="sub" id="bodyTrend"></div>
-              <div class="list" id="postureList" style="margin-top:14px;"></div>
-              <div class="note-box">
-                <div class="section-title" style="margin-bottom:4px;">Regra prática</div>
-                <div class="sub">Treinar um pouco quase todo dia e dormir bem costuma trazer resultado melhor do que treinar demais e parar no meio.</div>
-              </div>
+          <div class="inner-card">
+            <div class="section-title"><span class="icon">🧠</span> Nota do dia</div>
+            <textarea id="dayNote" class="field" placeholder="O que foi bem, o que vai melhorar, o que fará amanhã."></textarea>
+            <div style="height:8px"></div>
+            <label class="small">Humor / energia: <span id="moodValue">3</span>/5</label>
+            <div class="range-row">
+              <input type="range" min="1" max="5" id="mood" />
+              <span class="range-val" id="moodEmoji">😐</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div id="tab-meta" class="tabpage" style="display:none;">
-        <div class="section-title">🎯 Metas diárias e recompensas</div>
-        <div class="sub">A ideia é fazer o essencial primeiro, depois liberar a recompensa.</div>
-        <div class="grid2" style="margin-top:14px;">
-          <div class="card" style="background: rgba(0,0,0,.2); box-shadow:none;">
-            <div class="content">
-              <div class="section-title">Checklist principal</div>
-              <div class="task-list" id="mainChecklist"></div>
-            </div>
+      <!-- TAB: TREINO -->
+      <div id="tab-treino" class="tabpage content" style="display:none;">
+        <div class="section-title"><span class="icon">💪</span> Treino, postura e corpo forte</div>
+        <p class="sub">Consistência vale mais do que exagero. Reúne força, postura e base física.</p>
+        <div class="col2" style="margin-top:16px;">
+          <div class="inner-card">
+            <div class="section-title" style="margin-bottom:12px;">Treino completo</div>
+            <div id="trainingList"></div>
           </div>
-          <div class="card" style="background: rgba(0,0,0,.2); box-shadow:none;">
-            <div class="content">
-              <div class="section-title">Recompensas estilo jogo</div>
-              <div class="list" id="rewardsList"></div>
-              <div class="note-box">
-                <div class="sub">Você pode usar as recompensas como um sistema de progresso: primeiro faz o necessário, depois ganha tempo de lazer.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="tab-progresso" class="tabpage" style="display:none;">
-        <div class="section-title">📈 Seu progresso na semana</div>
-        <div class="sub">Aqui você vê se está mantendo o ritmo ou caindo de rendimento.</div>
-        <div class="grid2" style="margin-top:14px;">
-          <div class="card" style="background: rgba(0,0,0,.2); box-shadow:none;">
-            <div class="content">
-              <div class="section-title">Gráfico da semana</div>
-              <div class="list" id="weekList"></div>
-            </div>
-          </div>
-          <div class="card" style="background: rgba(0,0,0,.2); box-shadow:none;">
-            <div class="content">
-              <div class="section-title">Como você está indo</div>
-              <div class="sub" id="trajectoryText"></div>
-              <div class="note-box">
-                <div class="row"><span>Total de XP</span><strong id="totalXp">0</strong></div>
-                <div style="height:8px"></div>
-                <div class="row"><span>Média diária</span><strong id="avgXp">0</strong></div>
-                <div style="height:8px"></div>
-                <div class="row"><span>Dia selecionado</span><strong id="selectedXp">0 XP</strong></div>
-              </div>
+          <div class="inner-card">
+            <div class="section-title" style="margin-bottom:8px;">Postura e corpo</div>
+            <p class="sub" id="bodyTrend"></p>
+            <div style="margin-top:14px;" id="postureList"></div>
+            <div class="note-box" style="margin-top:14px;">
+              <div class="section-title" style="font-size:12px; margin-bottom:6px;">Regra prática</div>
+              <p class="sub" style="font-size:13px;">Treinar um pouco quase todo dia e dormir bem costuma trazer resultado melhor do que treinar demais e parar no meio.</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div id="tab-reforco" class="tabpage" style="display:none;">
-        <div class="section-title">🧠 Reforço de rotina e motivação</div>
-        <div class="sub">Para não parar no meio do caminho.</div>
-        <div class="grid2" style="margin-top:14px;">
-          <div class="card" style="background: rgba(0,0,0,.2); box-shadow:none;">
-            <div class="content">
-              <div class="section-title">Frase do dia</div>
-              <div class="note-box" style="font-size:18px; line-height:1.8; color:#e5e7eb;" id="mottoBox"></div>
-              <div class="small" style="margin-top:10px;">A meta não é ser perfeito. A meta é continuar aparecendo.</div>
-            </div>
+      <!-- TAB: META -->
+      <div id="tab-meta" class="tabpage content" style="display:none;">
+        <div class="section-title"><span class="icon">🎯</span> Metas diárias e recompensas</div>
+        <p class="sub">Faça o essencial primeiro, depois libere a recompensa.</p>
+        <div class="col2" style="margin-top:16px;">
+          <div class="inner-card">
+            <div class="section-title" style="margin-bottom:12px;">Checklist principal</div>
+            <div id="mainChecklist"></div>
           </div>
-          <div class="card" style="background: rgba(0,0,0,.2); box-shadow:none;">
-            <div class="content">
-              <div class="section-title">Diário rápido</div>
-              <textarea id="journalDraft" class="field" placeholder="Escreva 1 vitória de hoje ou 1 coisa que vai fazer amanhã."></textarea>
-              <div class="buttons">
-                <button class="btn primary" id="saveJournal">Salvar registro</button>
-                <button class="btn secondary" id="clearJournal">Limpar</button>
-              </div>
+          <div class="inner-card">
+            <div class="section-title" style="margin-bottom:12px;">Recompensas</div>
+            <div id="rewardsList"></div>
+            <div class="note-box" style="margin-top:12px;">
+              <p class="sub" style="font-size:13px;">Primeiro faz o necessário, depois ganha tempo de lazer.</p>
             </div>
-          </div>
-        </div>
-        <div class="card" style="margin-top:14px; background: rgba(0,0,0,.2); box-shadow:none;">
-          <div class="content">
-            <div class="section-title">Registros recentes</div>
-            <div class="timeline" id="journalList"></div>
           </div>
         </div>
       </div>
 
-    </div>
-  </div>
-
-  <div class="right-panel">
-    <div class="card">
-      <div class="content">
-        <div class="section-title">🏆 Resumo do painel</div>
-        <div class="list" style="margin-top:14px;">
-          <div class="row"><span>Dia atual</span><strong id="summaryToday">0 XP</strong></div>
-          <div class="row"><span>Sequência</span><strong id="summaryStreak">0 dias</strong></div>
-          <div class="row"><span>Nível</span><strong id="summaryLevel">Lv. 1</strong></div>
-          <div class="row"><span>Semana</span><strong id="summaryWeek">0%</strong></div>
+      <!-- TAB: PROGRESSO -->
+      <div id="tab-progresso" class="tabpage content" style="display:none;">
+        <div class="section-title"><span class="icon">📈</span> Progresso na semana</div>
+        <p class="sub">Veja se está mantendo o ritmo ou perdendo rendimento.</p>
+        <div class="col2" style="margin-top:16px;">
+          <div class="inner-card">
+            <div class="section-title" style="margin-bottom:12px;">Últimos 7 dias</div>
+            <div id="weekList"></div>
+          </div>
+          <div class="inner-card">
+            <div class="section-title" style="margin-bottom:8px;">Trajetória</div>
+            <p class="sub" id="trajectoryText"></p>
+            <div class="note-box">
+              <div class="note-row"><span>Total de XP</span><strong id="totalXp">0</strong></div>
+              <div class="note-row"><span>Média diária</span><strong id="avgXp">0</strong></div>
+              <div class="note-row"><span>Dia selecionado</span><strong id="selectedXp">0 XP</strong></div>
+            </div>
+          </div>
         </div>
-        <div class="note-box">
-          <div class="section-title" style="margin-bottom:6px;">Até onde você pode ir?</div>
-          <div class="sub" id="trajectoryMini"></div>
+      </div>
+
+      <!-- TAB: REFORÇO -->
+      <div id="tab-reforco" class="tabpage content" style="display:none;">
+        <div class="section-title"><span class="icon">🧠</span> Reforço de rotina e motivação</div>
+        <p class="sub">Para não parar no meio do caminho.</p>
+        <div class="col2" style="margin-top:16px;">
+          <div class="inner-card">
+            <div class="section-title" style="margin-bottom:12px;">Frase do dia</div>
+            <div class="motto-box" id="mottoBox"></div>
+            <p class="small">A meta não é ser perfeito. A meta é continuar aparecendo.</p>
+          </div>
+          <div class="inner-card">
+            <div class="section-title" style="margin-bottom:12px;">Diário rápido</div>
+            <textarea id="journalDraft" class="field" placeholder="Escreva 1 vitória de hoje ou 1 coisa que vai fazer amanhã."></textarea>
+            <div class="btn-row">
+              <button class="btn primary" id="saveJournal">Salvar registro</button>
+              <button class="btn secondary" id="clearJournal">Limpar</button>
+            </div>
+          </div>
+        </div>
+        <div class="inner-card" style="margin-top:14px;">
+          <div class="section-title" style="margin-bottom:12px;">Registros recentes</div>
+          <div id="journalList"></div>
         </div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="content">
-        <div class="section-title">🎁 Sistema de recompensas</div>
-        <div class="list" id="rewardMiniList" style="margin-top:14px;"></div>
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+      <div class="card content">
+        <div class="section-title" style="margin-bottom:14px;"><span class="icon">🏆</span> Resumo</div>
+        <div class="sum-row"><span>Dia atual</span><strong id="summaryToday">0 XP</strong></div>
+        <div class="sum-row"><span>Sequência</span><strong id="summaryStreak">0 dias</strong></div>
+        <div class="sum-row"><span>Nível</span><strong id="summaryLevel">Lv. 1</strong></div>
+        <div class="sum-row"><span>Semana</span><strong id="summaryWeek">0%</strong></div>
+        <div class="note-box" style="margin-top:14px;">
+          <div class="section-title" style="font-size:12px; margin-bottom:6px;">Até onde você pode ir?</div>
+          <p class="sub" style="font-size:13px;" id="trajectoryMini"></p>
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="content">
-        <div class="section-title">⚙️ Ações</div>
-        <div class="buttons">
-          <button class="btn primary" id="completeAll">Completar tudo hoje</button>
-          <button class="btn secondary" id="goToday">Voltar para hoje</button>
-          <button class="btn secondary" id="clearSelected">Limpar dia selecionado</button>
-          <button class="btn danger" id="resetAll">Resetar painel</button>
+      <div class="card content">
+        <div class="section-title" style="margin-bottom:14px;"><span class="icon">🎁</span> Recompensas</div>
+        <div id="rewardMiniList"></div>
+      </div>
+
+      <div class="card content">
+        <div class="section-title" style="margin-bottom:14px;"><span class="icon">⚙️</span> Ações</div>
+        <div class="btn-row">
+          <button class="btn primary" id="completeAll">✓ Completar tudo hoje</button>
+          <button class="btn secondary" id="goToday">↩ Voltar para hoje</button>
+          <button class="btn secondary" id="clearSelected">🗑 Limpar dia</button>
+          <button class="btn danger" id="resetAll">⚠ Resetar painel</button>
         </div>
         <div class="flash" id="flash"></div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="card" style="margin-top:18px;">
-  <div class="content">
-    <div class="section-title">🧭 Como usar o site</div>
-    <div class="grid3" style="margin-top:14px;">
-      <div class="mini"><strong>1. Marque o essencial</strong><p>Programação, Jeová, escola, treino e Libras têm pesos diferentes. Complete o principal primeiro.</p></div>
-      <div class="mini"><strong>2. Ganhe XP</strong><p>Cada área dá pontos. Mais consistência significa mais nível e mais recompensas.</p></div>
-      <div class="mini"><strong>3. Veja sua evolução</strong><p>O painel mostra sequência, semana, registros e seu ritmo para você não se perder.</p></div>
+  <!-- HOW TO USE -->
+  <section class="card" style="margin-top:18px;">
+    <div class="content">
+      <div class="section-title" style="margin-bottom:14px;"><span class="icon">🧭</span> Como usar o site</div>
+      <div class="how-grid">
+        <div class="how-card">
+          <div class="how-num">01</div>
+          <div class="how-title">Marque o essencial</div>
+          <p class="how-text">Programação, Jeová, escola, treino e Libras têm pesos diferentes. Complete o principal primeiro.</p>
+        </div>
+        <div class="how-card">
+          <div class="how-num">02</div>
+          <div class="how-title">Ganhe XP</div>
+          <p class="how-text">Cada área dá pontos. Mais consistência significa mais nível e mais recompensas desbloqueadas.</p>
+        </div>
+        <div class="how-card">
+          <div class="how-num">03</div>
+          <div class="how-title">Veja sua evolução</div>
+          <p class="how-text">O painel mostra sequência, semana, registros e seu ritmo para você não se perder.</p>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<div class="footer">Consistência hoje, força amanhã.</div>
+  <footer>⛏ Consistência hoje, força amanhã.</footer>
+</div>
 
-  </div>  <script>
-    const STORAGE_KEY = 'projeto-caverna-super-site-v1';
+<script>
+const STORAGE_KEY = 'projeto-caverna-super-site-v1';
 
-    const CORE_AREAS = [
-      { id: 'programacao', label: 'Programação', icon: '💻', points: 25, hint: 'Cursos, prática, GitHub ou projeto próprio', starter: ['Fazer 1 aula', 'Praticar 20 min', 'Comitar algo no GitHub'] },
-      { id: 'jeova', label: 'Jeová', icon: '🌙', points: 20, hint: 'Bíblia, oração, reunião ou reflexão', starter: ['Ler a Bíblia', 'Orar com foco', 'Anotar um aprendizado'] },
-      { id: 'estudo', label: 'Estudo escolar', icon: '📚', points: 20, hint: 'Lição, revisão, exercícios ou leitura', starter: ['Revisar matéria', 'Fazer exercício', 'Arrumar caderno'] },
-      { id: 'treino', label: 'Treino', icon: '💪', points: 20, hint: 'Força, postura, caminhada ou mobilidade', starter: ['Agachar', 'Fazer flexões', 'Trabalhar postura'] },
-      { id: 'libras', label: 'Libras', icon: '🤟', points: 15, hint: 'Alfabeto, sinais e frases curtas', starter: ['Praticar alfabeto', 'Aprender 3 sinais', 'Revisar vocabulário'] },
-    ];
+const CORE_AREAS = [
+  { id: 'programacao', label: 'Programação', icon: '💻', points: 25, hint: 'Cursos, prática, GitHub ou projeto próprio', starter: ['Fazer 1 aula', 'Praticar 20 min', 'Comitar no GitHub'] },
+  { id: 'jeova', label: 'Jeová', icon: '🌙', points: 20, hint: 'Bíblia, oração, reunião ou reflexão', starter: ['Ler a Bíblia', 'Orar com foco', 'Anotar aprendizado'] },
+  { id: 'estudo', label: 'Estudo escolar', icon: '📚', points: 20, hint: 'Lição, revisão, exercícios ou leitura', starter: ['Revisar matéria', 'Fazer exercício', 'Arrumar caderno'] },
+  { id: 'treino', label: 'Treino', icon: '💪', points: 20, hint: 'Força, postura, caminhada ou mobilidade', starter: ['Agachar', 'Flexões', 'Trabalhar postura'] },
+  { id: 'libras', label: 'Libras', icon: '🤟', points: 15, hint: 'Alfabeto, sinais e frases curtas', starter: ['Praticar alfabeto', 'Aprender 3 sinais', 'Revisar vocabulário'] },
+];
 
-    const HABITS = [
-      { id: 'agua', label: 'Água suficiente', icon: '💧' },
-      { id: 'sono', label: 'Dormir bem', icon: '😴' },
-      { id: 'postura', label: 'Postura consciente', icon: '🧍' },
-      { id: 'sem_scroll', label: 'Sem rolagem sem limite', icon: '⛔' },
-    ];
+const HABITS = [
+  { id: 'agua', label: 'Água suficiente', icon: '💧' },
+  { id: 'sono', label: 'Dormir bem', icon: '😴' },
+  { id: 'postura', label: 'Postura consciente', icon: '🧍' },
+  { id: 'sem_scroll', label: 'Sem rolagem sem limite', icon: '⛔' },
+];
 
-    const REWARDS = [
-      { label: '10 min de Instagram', min: 70 },
-      { label: '20 min de Instagram', min: 85 },
-      { label: '30 min de Instagram', min: 100 },
-      { label: 'Sessão extra de lazer', min: 125 },
-    ];
+const REWARDS = [
+  { label: '10 min de Instagram', min: 70 },
+  { label: '20 min de Instagram', min: 85 },
+  { label: '30 min de Instagram', min: 100 },
+  { label: 'Sessão extra de lazer', min: 125 },
+];
 
-    const TRAINING = [
-      { name: 'Agachamento', sets: '4x15', tip: 'Pés na largura dos ombros, desce com controle.' },
-      { name: 'Flexão', sets: '5 séries', tip: 'Corpo reto, peito perto do chão.' },
-      { name: 'Afundo', sets: '4x12 por perna', tip: 'Passo firme e joelho estável.' },
-      { name: 'Prancha', sets: '4x45s', tip: 'Barriga firme e lombar neutra.' },
-      { name: 'Superman', sets: '4x15', tip: 'Fortalece costas e postura.' },
-      { name: 'Ponte de glúteos', sets: '4x20', tip: 'Aperta glúteos no topo.' },
-      { name: 'Retração das escápulas', sets: '4x15', tip: 'Ombros para trás e para baixo.' },
-    ];
+const TRAINING = [
+  { name: 'Agachamento', sets: '4×15', tip: 'Pés na largura dos ombros, desce com controle.' },
+  { name: 'Flexão', sets: '5 séries', tip: 'Corpo reto, peito perto do chão.' },
+  { name: 'Afundo', sets: '4×12/perna', tip: 'Passo firme e joelho estável.' },
+  { name: 'Prancha', sets: '4×45s', tip: 'Barriga firme e lombar neutra.' },
+  { name: 'Superman', sets: '4×15', tip: 'Fortalece costas e postura.' },
+  { name: 'Ponte de glúteos', sets: '4×20', tip: 'Aperta glúteos no topo.' },
+  { name: 'Retração das escápulas', sets: '4×15', tip: 'Ombros para trás e para baixo.' },
+];
 
-    const POSTURE_TIPS = [
-      'Celular na altura dos olhos',
-      'Sentar com pés no chão',
-      'Não encolher os ombros',
-      'Fazer pausa a cada 45-60 min',
-      'Usar mochila com as duas alças',
-    ];
+const MOOD_EMOJI = ['', '😞', '😕', '😐', '😊', '🔥'];
 
-    const state = {
-      profile: {
-        name: 'Projeto Caverna',
-        goal: 'Ficar forte, estudar melhor, crescer na fé e manter disciplina.',
-        age: '14',
-        height: '1,68',
-        weight: '53',
-        motto: 'Não preciso ser perfeito. Preciso continuar.',
-      },
-      settings: {
-        dailyTarget: 80,
-      },
-      daily: {},
-      journal: []
+const state = {
+  profile: { name: 'Projeto Caverna', goal: 'Ficar forte, estudar melhor, crescer na fé e manter disciplina.', age: '14', height: '1,68', weight: '53', motto: 'Não preciso ser perfeito. Preciso continuar.' },
+  settings: { dailyTarget: 80 },
+  daily: {},
+  journal: []
+};
+
+let selectedDate = todayKey();
+let activeTab = 'hoje';
+let flashTimer = null;
+
+function todayKey() { return new Date().toISOString().slice(0, 10); }
+
+function readableDate(ds) {
+  const d = new Date(ds + 'T12:00:00');
+  return d.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' });
+}
+
+function createEmptyDay() {
+  return {
+    area: Object.fromEntries(CORE_AREAS.map(a => [a.id, false])),
+    habits: Object.fromEntries(HABITS.map(h => [h.id, false])),
+    mood: 3, note: '',
+  };
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const s = JSON.parse(raw);
+      Object.assign(state.profile, s.profile || {});
+      Object.assign(state.settings, s.settings || {});
+      state.daily = s.daily || {};
+      state.journal = s.journal || [];
+    }
+  } catch {}
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+}
+
+function scoreDay(day) {
+  if (!day) return 0;
+  const area = CORE_AREAS.reduce((s, a) => s + (day.area?.[a.id] ? a.points : 0), 0);
+  const hab = HABITS.reduce((s, h) => s + (day.habits?.[h.id] ? 5 : 0), 0);
+  const mood = Math.max(0, (day.mood || 0) - 1) * 2;
+  return area + hab + mood;
+}
+
+function currentDayData() {
+  if (!state.daily[selectedDate]) state.daily[selectedDate] = createEmptyDay();
+  return state.daily[selectedDate];
+}
+
+function totalXp() { return Object.values(state.daily).reduce((s, d) => s + scoreDay(d), 0); }
+
+function getLevel(total) { return { level: Math.floor(total / 150) + 1, into: total % 150, toNext: 150 }; }
+
+function calcStreak() {
+  let count = 0;
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    const day = state.daily[key];
+    if (day && CORE_AREAS.every(a => day.area?.[a.id])) count++;
+    else break;
+  }
+  return count;
+}
+
+function weekData() {
+  const arr = [], now = new Date();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now); d.setDate(now.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    arr.push({ key, label: d.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', ''), score: scoreDay(state.daily[key]) });
+  }
+  return arr;
+}
+
+function rewardFor(progress) { return [...REWARDS].reverse().find(r => progress >= r.min) || null; }
+
+function bodyTrend() {
+  const weight = Number(state.profile.weight) || 53;
+  const height = Number(state.profile.height.replace(',', '.')) || 1.68;
+  const bmi = weight / (height * height);
+  if (bmi < 18.5) return 'Você está magro; com treino e comida suficiente, há espaço para ganhar massa e ficar mais forte ao longo dos meses.';
+  if (bmi < 24.9) return 'Seu peso está em uma faixa comum. O foco vira ganhar músculo, melhorar postura e manter constância.';
+  return 'Seu corpo pode responder bem a treino e hábitos consistentes, com foco especial em rotina e alimentação.';
+}
+
+function trajectoryText(wp) {
+  if (wp >= 85) return 'Ritmo excelente. Mantendo isso por meses, você tende a ficar muito disciplinado, mais forte, mais organizado e com rotina estável.';
+  if (wp >= 65) return 'Bom caminho. Você já está construindo base real. Se continuar, os resultados vão ficar visíveis e consistentes.';
+  if (wp >= 40) return 'Você está engrenando. O próximo salto é ficar mais regular e reduzir os dias quebrados.';
+  return 'O começo está sendo irregular. Comece pequeno hoje e proteja a sequência de amanhã.';
+}
+
+function flash(msg) {
+  const el = document.getElementById('flash');
+  el.textContent = msg;
+  clearTimeout(flashTimer);
+  flashTimer = setTimeout(() => el.textContent = '', 1200);
+}
+
+function spawnXpPop(xp, el) {
+  const rect = el.getBoundingClientRect();
+  const pop = document.createElement('div');
+  pop.className = 'xp-pop';
+  pop.textContent = `+${xp} XP`;
+  pop.style.left = `${rect.left + rect.width / 2 - 30}px`;
+  pop.style.top = `${rect.top + window.scrollY}px`;
+  document.body.appendChild(pop);
+  setTimeout(() => pop.remove(), 900);
+}
+
+function escapeHtml(s) {
+  return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+}
+
+function render() {
+  saveState();
+  const day = currentDayData();
+  const today = state.daily[todayKey()] || createEmptyDay();
+  const levelInfo = getLevel(totalXp());
+  const week = weekData();
+  const todayScore = scoreDay(today);
+  const selectedScore = scoreDay(day);
+  const selectedProgress = Math.min(100, Math.round(selectedScore / state.settings.dailyTarget * 100));
+  const todayProgress = Math.min(100, Math.round(todayScore / state.settings.dailyTarget * 100));
+  const todayComplete = CORE_AREAS.filter(a => today.area?.[a.id]).length;
+  const streakVal = calcStreak();
+  const reward = rewardFor(selectedProgress);
+  const avg = Math.round(totalXp() / Math.max(1, Object.keys(state.daily).length));
+  const weekProgress = Math.min(100, Math.round(week.reduce((s, d) => s + d.score, 0) / (7 * state.settings.dailyTarget) * 100));
+  const trajectory = trajectoryText(weekProgress);
+
+  // Profile
+  document.getElementById('projectName').value = state.profile.name;
+  document.getElementById('goal').value = state.profile.goal;
+  document.getElementById('age').value = state.profile.age;
+  document.getElementById('height').value = state.profile.height;
+  document.getElementById('weight').value = state.profile.weight;
+  document.getElementById('motto').value = state.profile.motto;
+  document.getElementById('dateChip').textContent = readableDate(selectedDate);
+
+  // Chips
+  document.getElementById('streakChip').textContent = `${streakVal} dia(s) de sequência`;
+  document.getElementById('levelChip').textContent = `Lv. ${levelInfo.level}`;
+  document.getElementById('xpChip').textContent = `${totalXp()} XP total`;
+
+  // Stats
+  document.getElementById('todayXp').textContent = `${todayScore} XP`;
+  document.getElementById('todayNote').textContent = `${todayComplete}/5 áreas concluídas`;
+  document.getElementById('streak').textContent = streakVal;
+  document.getElementById('level').textContent = `Lv. ${levelInfo.level}`;
+  document.getElementById('levelNote').textContent = `${levelInfo.into}/${levelInfo.toNext} XP para subir`;
+  document.getElementById('reward').textContent = reward ? reward.label : 'Bloqueada';
+  document.getElementById('rewardNote').textContent = reward ? 'Liberada hoje 🔓' : 'Complete mais metas';
+
+  // Day progress
+  document.getElementById('dayProgressText').textContent = `${selectedProgress}%`;
+  document.getElementById('dayBar').style.width = `${selectedProgress}%`;
+  document.getElementById('dayRecommendation').textContent =
+    selectedProgress >= 85 ? '🔥 Dia muito forte' :
+    selectedProgress >= 60 ? '📈 Bom progresso' :
+    selectedProgress >= 30 ? '⚡ Dia em construção' : '🌱 Comece com uma meta pequena';
+  document.getElementById('selectedDate').value = selectedDate;
+  document.getElementById('dayNote').value = day.note || '';
+  document.getElementById('mood').value = day.mood || 3;
+  document.getElementById('moodValue').textContent = day.mood || 3;
+  document.getElementById('moodEmoji').textContent = MOOD_EMOJI[day.mood || 3];
+
+  // Area cards
+  document.getElementById('areaCards').innerHTML = CORE_AREAS.map(a => {
+    const done = !!day.area?.[a.id];
+    return `<button class="area-card ${done ? 'done' : ''}" data-area="${a.id}">
+      <div class="area-top">
+        <span class="area-icon">${a.icon}</span>
+        <span class="area-xp">+${a.points} XP</span>
+      </div>
+      <div class="area-name">${a.label}</div>
+      <div class="area-hint">${a.hint}</div>
+      <div class="area-status">
+        <span class="area-status-text">${done ? '✅ Feito' : '◻ Pendente'}</span>
+      </div>
+      <div class="area-starters">${a.starter.map(s => `<span class="starter-chip">${s}</span>`).join('')}</div>
+    </button>`;
+  }).join('');
+
+  // Habit cards
+  document.getElementById('habitCards').innerHTML = HABITS.map(h => {
+    const done = !!day.habits?.[h.id];
+    return `<button class="habit-btn ${done ? 'done' : ''}" data-habit="${h.id}">
+      <div>
+        <div class="habit-name">${h.icon} ${h.label}</div>
+        <div class="habit-sub">${done ? 'Marcado ✓' : 'Toque para marcar'}</div>
+      </div>
+      <span class="habit-xp">+5 XP</span>
+    </button>`;
+  }).join('');
+
+  // Training
+  document.getElementById('trainingList').innerHTML = TRAINING.map(t =>
+    `<div class="training-row">
+      <div><div class="training-name">${t.name}</div><div class="training-tip">${t.tip}</div></div>
+      <span class="training-sets">${t.sets}</span>
+    </div>`
+  ).join('');
+  document.getElementById('bodyTrend').textContent = bodyTrend();
+  document.getElementById('postureList').innerHTML = [
+    'Celular na altura dos olhos','Sentar com pés no chão','Não encolher os ombros','Pausa a cada 45-60 min','Mochila com as duas alças'
+  ].map(t => `<div class="training-row"><span>${t}</span></div>`).join('');
+
+  // Main checklist
+  document.getElementById('mainChecklist').innerHTML = CORE_AREAS.map(a => {
+    const done = !!day.area?.[a.id];
+    return `<div class="reward-item ${done ? 'unlocked' : ''}">
+      <div class="reward-top">
+        <div><div class="reward-label">${a.icon} ${a.label}</div><div class="reward-req">${a.hint}</div></div>
+        <span class="badge-status ${done ? 'unlocked' : 'locked'}">${done ? 'Feito' : 'Pendente'}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Rewards list
+  const rewardHTML = (r, progress, mini = false) => {
+    const unlocked = progress >= r.min;
+    return `<div class="reward-item ${unlocked ? 'unlocked' : 'locked'}">
+      <div class="reward-top">
+        <div><div class="reward-label">🎁 ${r.label}</div><div class="reward-req">${mini ? (unlocked ? 'Desbloqueado' : 'Bloqueado') : `Libera com ${r.min}%`}</div></div>
+        <span class="badge-status ${unlocked ? 'unlocked' : 'locked'}">${r.min}%</span>
+      </div>
+    </div>`;
+  };
+  document.getElementById('rewardsList').innerHTML = REWARDS.map(r => rewardHTML(r, selectedProgress)).join('');
+  document.getElementById('rewardMiniList').innerHTML = REWARDS.map(r => rewardHTML(r, selectedProgress, true)).join('');
+
+  // Week
+  const maxScore = Math.max(...week.map(d => d.score), state.settings.dailyTarget);
+  document.getElementById('weekList').innerHTML = week.map(d =>
+    `<div class="week-row">
+      <span class="week-label">${d.label}</span>
+      <div class="week-track"><div class="week-fill" style="width:${Math.min(100, Math.round(d.score / maxScore * 100))}%;"></div></div>
+      <span class="week-score">${d.score}</span>
+    </div>`
+  ).join('');
+
+  // Progress tab
+  document.getElementById('trajectoryText').textContent = trajectory;
+  document.getElementById('trajectoryMini').textContent = trajectory;
+  document.getElementById('totalXp').textContent = totalXp();
+  document.getElementById('avgXp').textContent = avg;
+  document.getElementById('selectedXp').textContent = `${selectedScore} XP`;
+  document.getElementById('summaryToday').textContent = `${todayScore} XP`;
+  document.getElementById('summaryStreak').textContent = `${streakVal} dias`;
+  document.getElementById('summaryLevel').textContent = `Lv. ${levelInfo.level}`;
+  document.getElementById('summaryWeek').textContent = `${weekProgress}%`;
+  document.getElementById('mottoBox').textContent = state.profile.motto;
+
+  // Journal
+  document.getElementById('journalList').innerHTML = state.journal.length
+    ? state.journal.map(j => `<div class="journal-entry"><div class="journal-date">${readableDate(j.date)}</div><div class="journal-text">${escapeHtml(j.text)}</div></div>`).join('')
+    : `<div class="journal-entry"><div class="journal-date">Sem registros ainda</div><div class="journal-text">Escreva uma vitória de hoje ou o plano de amanhã.</div></div>`;
+
+  attachEvents();
+  highlightTab();
+}
+
+function attachEvents() {
+  document.querySelectorAll('[data-area]').forEach(el => {
+    el.onclick = (e) => {
+      const id = el.getAttribute('data-area');
+      const day = currentDayData();
+      const wasOff = !day.area[id];
+      day.area[id] = wasOff;
+      if (wasOff) {
+        const area = CORE_AREAS.find(a => a.id === id);
+        spawnXpPop(area.points, e.currentTarget);
+      }
+      flash(wasOff ? '🏅 Meta concluída!' : '↩ Meta desmarcada');
+      render();
     };
-
-    let selectedDate = todayKey();
-    let activeTab = 'hoje';
-    let flashTimer = null;
-
-    function todayKey() {
-      return new Date().toISOString().slice(0, 10);
-    }
-
-    function readableDate(dateStr) {
-      const d = new Date(dateStr + 'T12:00:00');
-      return d.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' });
-    }
-
-    function createEmptyDay() {
-      return {
-        area: Object.fromEntries(CORE_AREAS.map(a => [a.id, false])),
-        habits: Object.fromEntries(HABITS.map(h => [h.id, false])),
-        mood: 3,
-        note: '',
-      };
-    }
-
-    function loadState() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) {
-          const saved = JSON.parse(raw);
-          Object.assign(state.profile, saved.profile || {});
-          Object.assign(state.settings, saved.settings || {});
-          state.daily = saved.daily || {};
-          state.journal = saved.journal || [];
-        }
-      } catch {}
-    }
-
-    function saveState() {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
-    }
-
-    function scoreDay(day) {
-      if (!day) return 0;
-      const areaScore = CORE_AREAS.reduce((sum, a) => sum + (day.area?.[a.id] ? a.points : 0), 0);
-      const habitScore = HABITS.reduce((sum, h) => sum + (day.habits?.[h.id] ? 5 : 0), 0);
-      const moodBonus = Math.max(0, (day.mood || 0) - 1) * 2;
-      return areaScore + habitScore + moodBonus;
-    }
-
-    function currentDayData() {
-      if (!state.daily[selectedDate]) state.daily[selectedDate] = createEmptyDay();
-      return state.daily[selectedDate];
-    }
-
-    function totalXp() {
-      return Object.values(state.daily).reduce((sum, d) => sum + scoreDay(d), 0);
-    }
-
-    function getLevel(total) {
-      const level = Math.floor(total / 150) + 1;
-      const into = total % 150;
-      return { level, into, toNext: 150 };
-    }
-
-    function streak() {
-      let count = 0;
-      for (let i = 0; i < 365; i++) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-        const key = d.toISOString().slice(0, 10);
-        const day = state.daily[key];
-        if (day && CORE_AREAS.every(a => day.area?.[a.id])) count++;
-        else break;
-      }
-      return count;
-    }
-
-    function weekData() {
-      const arr = [];
-      const now = new Date();
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(now);
-        d.setDate(now.getDate() - i);
-        const key = d.toISOString().slice(0, 10);
-        arr.push({
-          key,
-          label: d.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', ''),
-          score: scoreDay(state.daily[key]),
-        });
-      }
-      return arr;
-    }
-
-    function rewardFor(progress) {
-      return [...REWARDS].reverse().find(r => progress >= r.min) || null;
-    }
-
-    function bodyTrend() {
-      const weight = Number(state.profile.weight) || 53;
-      const height = Number(state.profile.height.replace(',', '.')) || 1.68;
-      const bmi = weight / (height * height);
-      if (bmi < 18.5) return 'Você está magro; com treino e comida suficiente, há espaço para ganhar massa e ficar mais forte ao longo dos meses.';
-      if (bmi < 24.9) return 'Seu peso está em uma faixa comum. O foco vira ganhar músculo, melhorar postura e manter constância.';
-      return 'Seu corpo pode responder bem a treino e hábitos consistentes, com foco especial em rotina e alimentação.';
-    }
-
-    function trajectoryText(weekProgress) {
-      if (weekProgress >= 85) return 'Ritmo excelente. Mantendo isso por meses, você tende a ficar muito disciplinado, mais forte, mais organizado e com rotina estável.';
-      if (weekProgress >= 65) return 'Bom caminho. Você já está construindo base real. Se continuar, os resultados vão ficar visíveis e consistentes.';
-      if (weekProgress >= 40) return 'Você está engrenando. O próximo salto é ficar mais regular e reduzir os dias quebrados.';
-      return 'O começo está sendo irregular. Comece pequeno hoje e proteja a sequência de amanhã.';
-    }
-
-    function flash(msg) {
-      const el = document.getElementById('flash');
-      el.textContent = msg;
-      clearTimeout(flashTimer);
-      flashTimer = setTimeout(() => el.textContent = '', 1100);
-    }
-
-    function render() {
-      saveState();
+  });
+  document.querySelectorAll('[data-habit]').forEach(el => {
+    el.onclick = (e) => {
+      const id = el.getAttribute('data-habit');
       const day = currentDayData();
-      const today = state.daily[todayKey()] || createEmptyDay();
-      const levelInfo = getLevel(totalXp());
-      const week = weekData();
-      const todayScore = scoreDay(today);
-      const selectedScore = scoreDay(day);
-      const selectedProgress = Math.min(100, Math.round(selectedScore / state.settings.dailyTarget * 100));
-      const todayProgress = Math.min(100, Math.round(todayScore / state.settings.dailyTarget * 100));
-      const todayComplete = CORE_AREAS.filter(a => today.area?.[a.id]).length;
-      const selectedComplete = CORE_AREAS.filter(a => day.area?.[a.id]).length;
-      const streakVal = streak();
-      const reward = rewardFor(selectedProgress);
-      const avg = Math.round(totalXp() / Math.max(1, Object.keys(state.daily).length));
-      const weekProgress = Math.min(100, Math.round(week.reduce((s, d) => s + d.score, 0) / (7 * state.settings.dailyTarget) * 100));
-      const trajectory = trajectoryText(weekProgress);
-
-      // Header/profile
-      document.getElementById('projectName').value = state.profile.name;
-      document.getElementById('goal').value = state.profile.goal;
-      document.getElementById('age').value = state.profile.age;
-      document.getElementById('height').value = state.profile.height;
-      document.getElementById('weight').value = state.profile.weight;
-      document.getElementById('motto').value = state.profile.motto;
-      document.getElementById('dateChip').textContent = readableDate(selectedDate);
-
-      // Stats
-      document.getElementById('streakChip').textContent = `${streakVal} dia(s) de sequência`;
-      document.getElementById('levelChip').textContent = `Lv. ${levelInfo.level}`;
-      document.getElementById('xpChip').textContent = `${totalXp()} XP total`;
-
-      document.getElementById('todayXp').textContent = `${todayScore} XP`;
-      document.getElementById('todayNote').textContent = `${todayComplete}/5 áreas concluídas`;
-      document.getElementById('streak').textContent = streakVal;
-      document.getElementById('level').textContent = `Lv. ${levelInfo.level}`;
-      document.getElementById('levelNote').textContent = `${levelInfo.into}/${levelInfo.toNext} XP para subir`;
-      document.getElementById('reward').textContent = reward ? reward.label : 'Bloqueada';
-      document.getElementById('rewardNote').textContent = reward ? 'Liberada hoje' : 'Complete mais metas';
-
-      // Daily section
-      document.getElementById('dayProgressText').textContent = `${selectedProgress}%`;
-      document.getElementById('dayBar').style.width = `${selectedProgress}%`;
-      document.getElementById('dayRecommendation').textContent = selectedProgress >= 85 ? 'Dia muito forte' : selectedProgress >= 60 ? 'Bom progresso' : selectedProgress >= 30 ? 'Dia em construção' : 'Comece com uma meta pequena';
-      document.getElementById('selectedDate').value = selectedDate;
-      document.getElementById('dayNote').value = day.note || '';
-      document.getElementById('mood').value = day.mood || 3;
-      document.getElementById('moodValue').textContent = day.mood || 3;
-
-      // Areas
-      const areaCards = document.getElementById('areaCards');
-      areaCards.innerHTML = CORE_AREAS.map(a => {
-        const done = !!day.area?.[a.id];
-        return `<button class="task ${done ? 'done' : ''}" data-area="${a.id}">
-          <div class="task-top"><div><div class="task-name">${a.icon} ${a.label}</div><div class="task-hint">${a.hint}</div></div><div class="xp">+${a.points} XP</div></div>
-          <div class="task-top" style="margin-top:8px;"><small>${done ? 'Feito' : 'Pendente'}</small><span class="check">${done ? '✅' : '◻️'}</span></div>
-          <div style="margin-top:10px; display:flex; flex-wrap:wrap; gap:6px;">${a.starter.map(s => `<span class="chip" style="padding:6px 10px; font-size:12px;">${s}</span>`).join('')}</div>
-        </button>`;
-      }).join('');
-
-      // Habits
-      const habitCards = document.getElementById('habitCards');
-      habitCards.innerHTML = HABITS.map(h => {
-        const done = !!day.habits?.[h.id];
-        return `<button class="task ${done ? 'done' : ''}" data-habit="${h.id}">
-          <div class="task-top"><div class="task-name">${h.icon} ${h.label}</div><div class="xp">+5 XP</div></div>
-          <div class="task-hint">${done ? 'Marcado' : 'Toque para marcar'}</div>
-        </button>`;
-      }).join('');
-
-      // Training
-      document.getElementById('trainingList').innerHTML = TRAINING.map(t => `
-        <div class="row"><div><strong>${t.name}</strong><small>${t.tip}</small></div><div><span class="chip">${t.sets}</span></div></div>
-      `).join('');
-      document.getElementById('bodyTrend').textContent = bodyTrend();
-      document.getElementById('postureList').innerHTML = [
-        'Celular na altura dos olhos', 'Sentar com pés no chão', 'Não encolher os ombros', 'Fazer pausa a cada 45-60 min', 'Usar mochila com as duas alças'
-      ].map(t => `<div class="row"><span>🪞 ${t}</span></div>`).join('');
-
-      // Main checklist & rewards
-      document.getElementById('mainChecklist').innerHTML = CORE_AREAS.map(a => {
-        const done = !!day.area?.[a.id];
-        return `<div class="task ${done ? 'done' : ''}" data-area2="${a.id}">
-          <div class="task-top"><div class="task-name">${a.icon} ${a.label}</div><div class="xp">+${a.points} XP</div></div>
-          <div class="task-hint">${a.hint}</div>
-          <div class="task-top" style="margin-top:8px;"><small>${done ? 'Feito' : 'Toque para marcar'}</small><span class="check">${done ? '✅' : '◻️'}</span></div>
-        </div>`;
-      }).join('');
-
-      document.getElementById('rewardsList').innerHTML = REWARDS.map(r => {
-        const unlocked = selectedProgress >= r.min;
-        return `<div class="reward ${unlocked ? 'unlocked' : 'locked'}"><div class="task-top"><div><strong>${r.label}</strong><small>Libera com ${r.min}%</small></div><div class="chip">${unlocked ? 'Liberado' : 'Bloqueado'}</div></div></div>`;
-      }).join('');
-      document.getElementById('rewardMiniList').innerHTML = REWARDS.map(r => {
-        const unlocked = selectedProgress >= r.min;
-        return `<div class="reward ${unlocked ? 'unlocked' : 'locked'}"><div class="task-top"><div><strong>${r.label}</strong><small>${unlocked ? 'Desbloqueado hoje' : 'Complete mais metas'}</small></div><div class="chip">${r.min}%</div></div></div>`;
-      }).join('');
-
-      // Week
-      document.getElementById('weekList').innerHTML = week.map(d => `
-        <div class="row"><span>${d.label}</span><div style="flex:1; margin:0 12px;"><div class="progress"><div class="bar" style="width:${Math.min(100, d.score)}%;"></div></div></div><strong>${d.score}</strong></div>
-      `).join('');
-
-      // Progress summary
-      document.getElementById('trajectoryText').textContent = trajectory;
-      document.getElementById('trajectoryMini').textContent = trajectory;
-      document.getElementById('totalXp').textContent = totalXp();
-      document.getElementById('avgXp').textContent = avg;
-      document.getElementById('selectedXp').textContent = `${selectedScore} XP`;
-      document.getElementById('summaryToday').textContent = `${todayScore} XP`;
-      document.getElementById('summaryStreak').textContent = `${streakVal} dias`;
-      document.getElementById('summaryLevel').textContent = `Lv. ${levelInfo.level}`;
-      document.getElementById('summaryWeek').textContent = `${weekProgress}%`;
-      document.getElementById('mottoBox').textContent = state.profile.motto;
-
-      // Journal
-      document.getElementById('journalList').innerHTML = state.journal.length
-        ? state.journal.map(j => `<div class="dayitem"><div><strong>${readableDate(j.date)}</strong><div class="small">${escapeHtml(j.text)}</div></div></div>`).join('')
-        : `<div class="dayitem"><div><strong>Ainda não há registros</strong><div class="small">Escreva uma vitória de hoje ou o plano de amanhã.</div></div></div>`;
-
-      attachEvents();
-      highlightTab();
-    }
-
-    function escapeHtml(str) {
-      return String(str)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
-    }
-
-    function attachEvents() {
-      document.querySelectorAll('[data-area]').forEach(el => {
-        el.onclick = () => { const id = el.getAttribute('data-area'); toggleArea(id); };
-      });
-      document.querySelectorAll('[data-area2]').forEach(el => {
-        el.onclick = () => { const id = el.getAttribute('data-area2'); toggleArea(id); };
-      });
-      document.querySelectorAll('[data-habit]').forEach(el => {
-        el.onclick = () => { const id = el.getAttribute('data-habit'); toggleHabit(id); };
-      });
-    }
-
-    function toggleArea(id) {
-      const day = currentDayData();
-      day.area[id] = !day.area[id];
-      flash('Meta atualizada');
+      const wasOff = !day.habits[id];
+      day.habits[id] = wasOff;
+      if (wasOff) spawnXpPop(5, e.currentTarget);
+      flash(wasOff ? '✅ Hábito marcado!' : '↩ Hábito desmarcado');
       render();
-    }
+    };
+  });
+}
 
-    function toggleHabit(id) {
-      const day = currentDayData();
-      day.habits[id] = !day.habits[id];
-      flash('Hábito atualizado');
-      render();
-    }
+function highlightTab() {
+  document.querySelectorAll('.tabpage').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
+  const page = document.querySelector(`#tab-${activeTab}`);
+  if (page) { page.style.display = 'block'; page.classList.add('active'); }
+  document.querySelectorAll('.tab').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === activeTab));
+}
 
-    function highlightTab() {
-      document.querySelectorAll('.tabpage').forEach(p => p.style.display = 'none');
-      document.querySelector(`#tab-${activeTab}`).style.display = 'block';
-      document.querySelectorAll('.tab').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === activeTab));
-    }
+// Tab clicks
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => { activeTab = btn.dataset.tab; highlightTab(); });
+});
 
-    // Tabs
-    document.querySelectorAll('.tab').forEach(btn => {
-      btn.addEventListener('click', () => {
-        activeTab = btn.dataset.tab;
-        highlightTab();
-      });
-    });
+// Profile inputs
+['projectName','goal','age','height','weight','motto'].forEach(id => {
+  document.getElementById(id).addEventListener('input', e => {
+    const key = id === 'projectName' ? 'name' : id;
+    state.profile[key] = e.target.value;
+    saveState();
+    if (id === 'motto') document.getElementById('mottoBox').textContent = e.target.value;
+    if (id === 'weight' || id === 'height') document.getElementById('bodyTrend').textContent = bodyTrend();
+    document.getElementById('streakChip'); // no-op to keep reference
+  });
+});
 
-    // Inputs
-    document.getElementById('projectName').addEventListener('input', e => { state.profile.name = e.target.value; render(); });
-    document.getElementById('goal').addEventListener('input', e => { state.profile.goal = e.target.value; render(); });
-    document.getElementById('age').addEventListener('input', e => { state.profile.age = e.target.value; render(); });
-    document.getElementById('height').addEventListener('input', e => { state.profile.height = e.target.value; render(); });
-    document.getElementById('weight').addEventListener('input', e => { state.profile.weight = e.target.value; render(); });
-    document.getElementById('motto').addEventListener('input', e => { state.profile.motto = e.target.value; render(); });
-    document.getElementById('selectedDate').addEventListener('change', e => { selectedDate = e.target.value; render(); });
-    document.getElementById('dayNote').addEventListener('input', e => { currentDayData().note = e.target.value; render(); });
-    document.getElementById('mood').addEventListener('input', e => { currentDayData().mood = Number(e.target.value); render(); });
+document.getElementById('selectedDate').addEventListener('change', e => { selectedDate = e.target.value; render(); });
+document.getElementById('dayNote').addEventListener('input', e => { currentDayData().note = e.target.value; saveState(); });
+document.getElementById('mood').addEventListener('input', e => {
+  const v = Number(e.target.value);
+  currentDayData().mood = v;
+  document.getElementById('moodValue').textContent = v;
+  document.getElementById('moodEmoji').textContent = MOOD_EMOJI[v];
+  saveState();
+});
 
-    document.getElementById('saveJournal').addEventListener('click', () => {
-      const text = document.getElementById('journalDraft').value.trim();
-      if (!text) return;
-      state.journal.unshift({ id: crypto.randomUUID(), date: selectedDate, text });
-      state.journal = state.journal.slice(0, 30);
-      document.getElementById('journalDraft').value = '';
-      flash('Registro salvo');
-      render();
-    });
-    document.getElementById('clearJournal').addEventListener('click', () => {
-      document.getElementById('journalDraft').value = '';
-    });
-    document.getElementById('completeAll').addEventListener('click', () => {
-      const day = currentDayData();
-      day.area = Object.fromEntries(CORE_AREAS.map(a => [a.id, true]));
-      day.habits = Object.fromEntries(HABITS.map(h => [h.id, true]));
-      day.mood = 5;
-      flash('Dia completo!');
-      render();
-    });
-    document.getElementById('goToday').addEventListener('click', () => {
-      selectedDate = todayKey();
-      render();
-    });
-    document.getElementById('clearSelected').addEventListener('click', () => {
-      delete state.daily[selectedDate];
-      flash('Dia selecionado limpo');
-      render();
-    });
-    document.getElementById('resetAll').addEventListener('click', () => {
-      if (confirm('Apagar todos os dados locais do painel?')) {
-        localStorage.removeItem(STORAGE_KEY);
-        location.reload();
-      }
-    });
+document.getElementById('saveJournal').addEventListener('click', () => {
+  const text = document.getElementById('journalDraft').value.trim();
+  if (!text) return;
+  state.journal.unshift({ id: crypto.randomUUID(), date: selectedDate, text });
+  state.journal = state.journal.slice(0, 30);
+  document.getElementById('journalDraft').value = '';
+  flash('📝 Registro salvo!');
+  render();
+});
+document.getElementById('clearJournal').addEventListener('click', () => { document.getElementById('journalDraft').value = ''; });
 
-    // boot
-    loadState();
-    if (!selectedDate) selectedDate = todayKey();
-    document.getElementById('selectedDate').value = selectedDate;
-    render();
-  </script></body>
+document.getElementById('completeAll').addEventListener('click', () => {
+  const day = currentDayData();
+  day.area = Object.fromEntries(CORE_AREAS.map(a => [a.id, true]));
+  day.habits = Object.fromEntries(HABITS.map(h => [h.id, true]));
+  day.mood = 5;
+  flash('🔥 Dia completo!');
+  render();
+});
+document.getElementById('goToday').addEventListener('click', () => { selectedDate = todayKey(); render(); });
+document.getElementById('clearSelected').addEventListener('click', () => { delete state.daily[selectedDate]; flash('🗑 Dia limpo'); render(); });
+document.getElementById('resetAll').addEventListener('click', () => {
+  if (confirm('Apagar todos os dados locais do painel?')) { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+});
+
+// Boot
+loadState();
+selectedDate = todayKey();
+document.getElementById('selectedDate').value = selectedDate;
+render();
+</script>
+</body>
 </html>
